@@ -45,7 +45,7 @@ public class CharacterMovement : MonoBehaviour
     }
 
     private void UpdateMoveVertical() {
-        Debug.Log(isGrounded);
+        
         if (isGrounded && playerVerticalVelocity.y < 0) {
             playerVerticalVelocity.y = 0;
         }
