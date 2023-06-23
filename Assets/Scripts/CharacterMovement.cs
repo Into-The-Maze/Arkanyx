@@ -2,26 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterMovement : MonoBehaviour
-{
+public class CharacterMovement : MonoBehaviour {
     private CharacterController body;
     private Transform player;
     private Camera cam;
 
-    public float speed = 5;
     private bool isGrounded;
-    private Vector3 playerVerticalVelocity = Vector3.zero;
-    private float gravityValue = -20f;  
-    private float jumpHeight = 1.0f;
     private CapsuleCollider floorDetector;
+    private Vector3 playerVerticalVelocity = Vector3.zero;
+    public float speed = 6.0f;
+    private float gravityValue = -20f;
+    private float jumpHeight = 3.0f;
 
-    void Start()
-    {
+    void Start() {
+        Cursor.lockState = CursorLockMode.Locked;
         body = GetComponent<CharacterController>();
         player = GetComponent<Transform>();
         cam = Camera.main;
         floorDetector = GetComponent<CapsuleCollider>();
     }
+
     void Update() {
         UpdateMoveHorizontal();
         UpdateMoveVertical();
@@ -36,21 +36,20 @@ public class CharacterMovement : MonoBehaviour
     }
 
     private void UpdateMoveHorizontal() {
-        var forward = cam.transform.forward;
-        var right = cam.transform.right;
-        forward.y = 0;
-        right.y = 0;
-
-        body.Move(speed * Time.deltaTime * ((Input.GetAxis("Horizontal") * right) + (Input.GetAxis("Vertical") * forward)).normalized);
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+        Vector3 direction = (horizontal * body.transform.right + vertical * body.transform.forward).normalized;
+        Vector3 moveDir = direction * speed;
+        body.Move(moveDir * Time.deltaTime);
     }
 
     private void UpdateMoveVertical() {
-        
-        if (isGrounded && playerVerticalVelocity.y < 0) {
-            playerVerticalVelocity.y = 0;
+        if (isGrounded && playerVerticalVelocity.y < 0f) {
+            playerVerticalVelocity.y = -1f;
         }
         if (Input.GetButtonDown("Jump") && isGrounded) {
-            playerVerticalVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+            playerVerticalVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravityValue);
+            Debug.Log("Jumped");
         }
         playerVerticalVelocity.y += gravityValue * Time.deltaTime;
         body.Move(playerVerticalVelocity * Time.deltaTime);
