@@ -13,8 +13,8 @@ public class CameraHandler : MonoBehaviour
     private const float maxLookUpDegrees = -80f;
     private const float maxLookDownDegrees = 90f;
 
-    private bool cursorLocked = true;
-    private bool cursorVisible = false;
+    private bool cursorLocked = false;
+    private bool cursorVisible = true;
 
     void Start()
     {
