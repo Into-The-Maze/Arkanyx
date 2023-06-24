@@ -11,9 +11,17 @@ public class CharacterMovement : MonoBehaviour {
     public float speed = 6.0f;
     private float gravityValue = -20f;
     private float jumpHeight = 3.0f;
+    public static float stamina;
+    public static float maxStamina = 50f;
+    public float staminaRegenMultiplier = 1f;
+    public bool isRunning;
+    float staminaCounter = 0f;
+    float stamniaRegeneration;
 
     void Start() {
+        Cursor.lockState = CursorLockMode.Locked;
         body = GetComponent<CharacterController>();
+        stamina = maxStamina;
     }
 
     void Update() {
@@ -33,6 +41,37 @@ public class CharacterMovement : MonoBehaviour {
     }
 
     private void UpdateMoveHorizontal() {
+        stamina = Mathf.Clamp(stamina, 0, 100);
+        if (Input.GetKeyDown("left shift") && stamina > 10) {
+            speed = 10f;
+            stamina -= 3;
+            staminaRegenMultiplier = 2f;
+            isRunning = true;
+        }
+        if (Input.GetKeyUp("left shift") || stamina == 0) {
+            speed = 6f;
+            staminaRegenMultiplier = 1f;
+            isRunning = false;
+        }
+        if (Input.GetKeyDown("left ctrl")) {
+            speed = 3f;
+            staminaRegenMultiplier = 1.25f;
+
+        }
+        if (Input.GetKeyUp("left ctrl")) {
+            speed = 6f;
+            staminaRegenMultiplier = 1f;
+        }
+        staminaCounter += Time.deltaTime * staminaRegenMultiplier;
+        if (staminaCounter >= 0.1f && stamina < 100) {
+            staminaCounter = 0f;
+            if (isRunning) {
+                stamina -= 1;
+            }
+            else {
+                stamina += 1;
+            }
+        }
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direction = (horizontal * body.transform.right + vertical * body.transform.forward).normalized;
