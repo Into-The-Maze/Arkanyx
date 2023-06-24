@@ -71,6 +71,7 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         //if square contains the same item, increase stack
         else if (inventory[squareReference.y, squareReference.x].item.ID == selectedItem.item.ID) {
             inventory[squareReference.y, squareReference.x].stack += selectedItem.stack;
+            inventory[squareReference.y, squareReference.x].invObject.GetComponentInChildren<Text>().text = inventory[squareReference.y, squareReference.x].stack.ToString();
 
             selectedItem.item = null;
             selectedItem.stack = 0;
@@ -135,6 +136,7 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         selectedItem.stack = 1;
         itemPrefab.GetComponent<UnityEngine.UI.Image>().sprite = selectedItem.item.UIImage;
         itemPrefab.name = selectedItem.item.ID;
+        itemPrefab.GetComponentInChildren<Text>().text = selectedItem.stack.ToString();
         selectedItemGameObject = Instantiate(itemPrefab, Input.mousePosition, Quaternion.identity, UICanvas.transform);
         StartCoroutine(drag(selectedItemGameObject));
     }
