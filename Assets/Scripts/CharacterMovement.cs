@@ -4,35 +4,32 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour {
     private CharacterController body;
-    private Transform player;
-    private Camera cam;
+    
 
     private bool isGrounded;
-    private CapsuleCollider floorDetector;
     private Vector3 playerVerticalVelocity = Vector3.zero;
     public float speed = 6.0f;
     private float gravityValue = -20f;
     private float jumpHeight = 3.0f;
 
     void Start() {
-        Cursor.lockState = CursorLockMode.Locked;
         body = GetComponent<CharacterController>();
-        player = GetComponent<Transform>();
-        cam = Camera.main;
-        floorDetector = GetComponent<CapsuleCollider>();
     }
 
     void Update() {
-        UpdateMoveHorizontal();
-        UpdateMoveVertical();
+        if (!UIToggler.inventoryOpen) {
+            UpdateMoveHorizontal();
+            UpdateMoveVertical();
+        }
+        
     }
 
     private void OnTriggerStay(Collider other) {
-        if (other.tag == "Ground") { isGrounded = true; }
+        if (other.CompareTag("Ground")) { isGrounded = true; }
     }
 
     private void OnTriggerExit(Collider other) {
-        if (other.tag == "Ground") { isGrounded = false; }
+        if (other.CompareTag("Ground")) { isGrounded = false; }
     }
 
     private void UpdateMoveHorizontal() {

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -563,6 +563,7 @@ GameObject:
   - component: {fileID: 1103740393}
   - component: {fileID: 1103740392}
   - component: {fileID: 1103740391}
+  - component: {fileID: 1103740395}
   m_Layer: 5
   m_Name: UI Canvas
   m_TagString: Untagged
@@ -652,6 +653,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1103740395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1103740390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cb4358afb74d3a4aaca93f47e35bd96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventory: {fileID: 1855405012}
 --- !u!1 &1397565537
 GameObject:
   m_ObjectHideFlags: 0
@@ -858,6 +872,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   invGrid: {fileID: 1855405013}
   UICanvas: {fileID: 1103740394}
+  itemPrefab: {fileID: 8748276404236097739, guid: d13ffdd2431ef1a479e84126c213df71,
+    type: 3}
 --- !u!114 &1855405017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -867,9 +883,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1855405012}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d0bd66584ae9f44ab5d13130b728385, type: 3}
+  m_Script: {fileID: 11500000, guid: fb8552c599067594ba4853096789ced1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allItems:
+  - {fileID: 11400000, guid: 912b9df38e877e244b5176e38c011808, type: 2}
+  - {fileID: 11400000, guid: b8b7102c528f98b4f8fc52cbbb130289, type: 2}
 --- !u!1 &2057149213
 GameObject:
   m_ObjectHideFlags: 0

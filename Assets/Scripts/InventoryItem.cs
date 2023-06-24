@@ -8,6 +8,8 @@ public class InventoryItem : ScriptableObject
 {
     public GameObject Item;
 
-    Image UIImage;
+    public Sprite UIImage;
+
+    public string ID;
 
 }

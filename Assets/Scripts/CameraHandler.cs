@@ -13,22 +13,23 @@ public class CameraHandler : MonoBehaviour
     private const float maxLookUpDegrees = -80f;
     private const float maxLookDownDegrees = 90f;
 
-    private bool cursorLocked = false;
-    private bool cursorVisible = true;
+    
 
     void Start()
     {
         mouseSensitivity = 2f;
         cameraVerticalRotation = 0f;
 
-        Cursor.visible = cursorVisible;
-        Cursor.lockState = cursorLocked ? CursorLockMode.Locked : CursorLockMode.None;
+        
     }
 
     void Update()
     {
-        handleCameraVertical();
-        handleCameraHorizontal();
+        if (!UIToggler.inventoryOpen) {
+            handleCameraVertical();
+            handleCameraHorizontal();
+        }
+        
     }
 
     private void handleCameraVertical() {
