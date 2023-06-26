@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-[CreateAssetMenu]
-public class InventoryItem : ScriptableObject
+public class InventoryItemData : MonoBehaviour
 {
     public GameObject Item;
 
@@ -13,5 +11,4 @@ public class InventoryItem : ScriptableObject
     public string ID;
 
     public bool Stackable;
-
 }

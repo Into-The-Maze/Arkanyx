@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 863a74750319fd64094533237c0c02cd, type: 3}
-  m_Name: Test item 2
+  m_Name: Hammer
   m_EditorClassIdentifier: 
-  Item: {fileID: 0}
-  UIImage: {fileID: 21300000, guid: 6e54f04a3121a314aa60b6578af009e9, type: 3}
-  ID: 0001
-  Stackable: 1
+  Item: {fileID: 8230972524184196726, guid: 1f549a778b3178a40afad8fe898444a0, type: 3}
+  UIImage: {fileID: 21300000, guid: 15ab2376212ec7145b8a9284e37d7434, type: 3}
+  ID: 0002
+  Stackable: 0

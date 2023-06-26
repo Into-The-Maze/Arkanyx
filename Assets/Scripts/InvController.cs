@@ -9,6 +9,8 @@ using UnityEngine.UIElements;
 
 public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    public GameObject player;
+
     private const int invWidth = 10;
     private const int invHeight = 4;
     private const int tileWidthPx = 32;
@@ -33,11 +35,13 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         selectedItem.item = null;
         selectedItem.stack = 0;
         initInventory();
-        
     }
 
     private void Update() {
 
+        if (Input.GetMouseButtonDown(0) && !active) {
+            dropItem();
+        }
 
         if (!active) { return; }
 
@@ -50,6 +54,21 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (Input.GetKeyDown(KeyCode.R) && selectedItem.item == null) {//test script
             createRandomItem();
         }
+    }
+
+    private void dropItem() {
+        GameObject droppedItem= Instantiate(selectedItem.item.Item, player.transform.position + player.transform.forward * 1.5f + player.transform.up * 1.1f, Quaternion.identity);
+        var data = droppedItem.AddComponent<InventoryItemData>();
+        data.Item = selectedItem.item.Item;
+        data.UIImage = selectedItem.item.UIImage;
+        data.ID = selectedItem.item.ID;
+        data.Stackable = selectedItem.item.Stackable;
+
+        selectedItem.item = null;
+        selectedItem.stack = 0;
+        Destroy(selectedItemGameObject);
+
+        itemSelected = false;
     }
 
     private void placeItem((int x, int y) squareReference) {
@@ -68,8 +87,8 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             
         }
 
-        //if square contains the same item, increase stack
-        else if (inventory[squareReference.y, squareReference.x].item.ID == selectedItem.item.ID) {
+        //if square contains the same item and item is stackable, increase stack
+        else if (inventory[squareReference.y, squareReference.x].item.ID == selectedItem.item.ID && inventory[squareReference.y, squareReference.x].item.Stackable) {
             inventory[squareReference.y, squareReference.x].stack += selectedItem.stack;
             inventory[squareReference.y, squareReference.x].invObject.GetComponentInChildren<Text>().text = inventory[squareReference.y, squareReference.x].stack.ToString();
 
@@ -98,7 +117,6 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         //Debug.Log($"{inventory[squareReference.y, squareReference.x].item.ID}, {inventory[squareReference.y, squareReference.x].stack}");
     }
 
-
     private void placeItemObject((int x, int y) squareReference) {
         selectedItemGameObject.transform.SetParent(invGrid.transform);
 
@@ -106,7 +124,6 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         selectedItemGameObject = null;
     }
-
 
     private void selectItem((int x, int y) squareReference) {
         if (inventory[squareReference.y, squareReference.x].item == null) { return; }
@@ -128,8 +145,6 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
 
     }
-
-    
 
     private void createRandomItem() { //again, test script
         selectedItem.item = ItemDropTable.i.allItems[UnityEngine.Random.Range(0, ItemDropTable.i.allItems.Count)];

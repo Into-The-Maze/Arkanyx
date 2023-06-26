@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -585,6 +585,7 @@ GameObject:
   - component: {fileID: 845741283}
   - component: {fileID: 845741285}
   - component: {fileID: 845741286}
+  - component: {fileID: 845741287}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -705,6 +706,22 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 1
   m_Center: {x: 0, y: -0.75, z: 0}
+--- !u!54 &845741287
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845741277}
+  serializedVersion: 2
+  m_Mass: 2
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1103740390
 GameObject:
   m_ObjectHideFlags: 0
@@ -927,7 +944,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1397565537}
   serializedVersion: 2
-  m_Mass: 0.0000001
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
@@ -1025,6 +1042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3af5d48947444d04a8f14d328226b08d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 845741277}
   invGrid: {fileID: 1855405013}
   UICanvas: {fileID: 1103740394}
   itemPrefab: {fileID: 8748276404236097739, guid: d13ffdd2431ef1a479e84126c213df71,
@@ -1044,6 +1062,7 @@ MonoBehaviour:
   allItems:
   - {fileID: 11400000, guid: 912b9df38e877e244b5176e38c011808, type: 2}
   - {fileID: 11400000, guid: b8b7102c528f98b4f8fc52cbbb130289, type: 2}
+  - {fileID: 11400000, guid: 582ecc4621a2c894c860b09e043dc642, type: 2}
 --- !u!1 &1961945348
 GameObject:
   m_ObjectHideFlags: 0
