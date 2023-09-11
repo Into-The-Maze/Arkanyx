@@ -7,43 +7,34 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class InvController : MonoBehaviour
 {
     public GameObject player;
-
-    private const int invWidth = 10;
-    private const int invHeight = 4;
-    private const int tileWidthPx = 32;
-    private const int tileHeightPx = 32;
-
-    public static bool active;
+   
     public static bool itemSelected;
 
-    public RectTransform invGrid;
+    public static InvGrid selectedInvGrid;
+    
+
     public RectTransform UICanvas;
 
     private (InventoryItem item, int stack) selectedItem;
     private GameObject selectedItemGameObject;
     public GameObject itemPrefab;
 
-    public static (InventoryItem item, int stack, GameObject invObject)[,] inventory;
-
-    
-
     private void Awake() {
-        active = false;
+        selectedInvGrid = null;
         selectedItem.item = null;
         selectedItem.stack = 0;
-        initInventory();
     }
 
     private void Update() {
 
-        if (Input.GetMouseButtonDown(0) && !active) {
+        if (Input.GetMouseButtonDown(0) && selectedInvGrid == null) {
             dropItem();
         }
 
-        if (!active) { return; }
+        if (selectedInvGrid == null) { return; }
 
         if (Input.GetMouseButtonDown(0) && selectedItem.item == null) {
             selectItem(getInvSquareCoords(Input.mousePosition));
@@ -57,7 +48,7 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
 
     private void dropItem() {
-        GameObject droppedItem= Instantiate(selectedItem.item.Item, player.transform.position + player.transform.forward * 1.5f + player.transform.up * 1.1f, Quaternion.identity);
+        GameObject droppedItem = Instantiate(selectedItem.item.Item, player.transform.position + player.transform.forward * 1.5f + player.transform.up * 1.1f, Quaternion.identity);
         var data = droppedItem.AddComponent<InventoryItemData>();
         data.Item = selectedItem.item.Item;
         data.UIImage = selectedItem.item.UIImage;
@@ -74,10 +65,10 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private void placeItem((int x, int y) squareReference) {
 
         //if square empty, put item in square
-        if (inventory[squareReference.y, squareReference.x].item == null) {
-            inventory[squareReference.y, squareReference.x].item = selectedItem.item;
-            inventory[squareReference.y, squareReference.x].stack = selectedItem.stack;
-            inventory[squareReference.y, squareReference.x].invObject = selectedItemGameObject;
+        if (selectedInvGrid.inventory[squareReference.y, squareReference.x].item == null) {
+            selectedInvGrid.inventory[squareReference.y, squareReference.x].item = selectedItem.item;
+            selectedInvGrid.inventory[squareReference.y, squareReference.x].stack = selectedItem.stack;
+            selectedInvGrid.inventory[squareReference.y, squareReference.x].invObject = selectedItemGameObject;
 
             selectedItem.item = null;
             selectedItem.stack = 0;
@@ -88,9 +79,9 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
 
         //if square contains the same item and item is stackable, increase stack
-        else if (inventory[squareReference.y, squareReference.x].item.ID == selectedItem.item.ID && inventory[squareReference.y, squareReference.x].item.Stackable) {
-            inventory[squareReference.y, squareReference.x].stack += selectedItem.stack;
-            inventory[squareReference.y, squareReference.x].invObject.GetComponentInChildren<Text>().text = inventory[squareReference.y, squareReference.x].stack.ToString();
+        else if (selectedInvGrid.inventory[squareReference.y, squareReference.x].item.ID == selectedItem.item.ID && selectedInvGrid.inventory[squareReference.y, squareReference.x].item.Stackable) {
+            selectedInvGrid.inventory[squareReference.y, squareReference.x].stack += selectedItem.stack;
+            selectedInvGrid.inventory[squareReference.y, squareReference.x].invObject.GetComponentInChildren<Text>().text = selectedInvGrid.inventory[squareReference.y, squareReference.x].stack.ToString();
 
             selectedItem.item = null;
             selectedItem.stack = 0;
@@ -108,9 +99,9 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             placeItemObject(squareReference);
             
             selectItem(squareReference);
-            inventory[squareReference.y, squareReference.x].item = tempData.item;
-            inventory[squareReference.y, squareReference.x].stack = tempData.stack;
-            inventory[squareReference.y, squareReference.x].invObject = tempObject;
+            selectedInvGrid.inventory[squareReference.y, squareReference.x].item = tempData.item;
+            selectedInvGrid.inventory[squareReference.y, squareReference.x].stack = tempData.stack;
+            selectedInvGrid.inventory[squareReference.y, squareReference.x].invObject = tempObject;
 
             //dont think about this too hard its very unthinky
         }
@@ -118,27 +109,27 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
 
     private void placeItemObject((int x, int y) squareReference) {
-        selectedItemGameObject.transform.SetParent(invGrid.transform);
+        selectedItemGameObject.transform.SetParent(selectedInvGrid.transform);
 
-        selectedItemGameObject.transform.localPosition = new Vector2(squareReference.x * tileWidthPx + tileWidthPx * 0.5f, -(squareReference.y * tileHeightPx + tileHeightPx * 0.5f));
+        selectedItemGameObject.transform.localPosition = new Vector2(squareReference.x * selectedInvGrid.tileWidthPx + selectedInvGrid.tileWidthPx * 0.5f, -(squareReference.y * selectedInvGrid.tileHeightPx + selectedInvGrid.tileHeightPx * 0.5f));
 
         selectedItemGameObject = null;
     }
 
     private void selectItem((int x, int y) squareReference) {
-        if (inventory[squareReference.y, squareReference.x].item == null) { return; }
+        if (selectedInvGrid.inventory[squareReference.y, squareReference.x].item == null) { return; }
         
 
 
-        selectedItem.item = inventory[squareReference.y, squareReference.x].item;
-        selectedItem.stack = inventory[squareReference.y, squareReference.x].stack;
-        selectedItemGameObject = inventory[squareReference.y, squareReference.x].invObject;
+        selectedItem.item = selectedInvGrid.inventory[squareReference.y, squareReference.x].item;
+        selectedItem.stack = selectedInvGrid.inventory[squareReference.y, squareReference.x].stack;
+        selectedItemGameObject = selectedInvGrid.inventory[squareReference.y, squareReference.x].invObject;
 
         selectedItemGameObject.transform.SetParent(UICanvas.transform);
 
-        inventory[squareReference.y, squareReference.x].item = null;
-        inventory[squareReference.y, squareReference.x].stack = 0;
-        inventory[squareReference.y, squareReference.x].invObject = null;
+        selectedInvGrid.inventory[squareReference.y, squareReference.x].item = null;
+        selectedInvGrid.inventory[squareReference.y, squareReference.x].stack = 0;
+        selectedInvGrid.inventory[squareReference.y, squareReference.x].invObject = null;
 
         StartCoroutine(drag(selectedItemGameObject));
         
@@ -165,38 +156,6 @@ public class InvController : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
 
     private (int, int) getInvSquareCoords(Vector2 mousePos) {
-        return ((int)((mousePos.x - invGrid.position.x) / tileWidthPx), (int)((invGrid.position.y - mousePos.y) / tileHeightPx));
-    }
-
-    private void initInventory() {
-        inventory = new (InventoryItem item, int stack, GameObject invObject)[invHeight, invWidth];
-        invGrid = GetComponent<RectTransform>();
-
-        //initialises the inventory for the first time
-        for (int i = 0; i < invHeight; i++) {
-            for (int j = 0; j < invWidth; j++) {
-                inventory[i, j].item = null;
-                inventory[i, j].stack = 0;
-            }
-        }
-
-        //sets grid size based on nimber of grid squares along its width and height
-        invGrid.sizeDelta = new Vector2(invWidth * tileWidthPx, invHeight * tileHeightPx);
-        //positions grid exactly in centre of canvas.
-        invGrid.position = new Vector2(UICanvas.sizeDelta.x * 0.5f - invGrid.sizeDelta.x * 0.5f,  UICanvas.sizeDelta.y * 0.5f + invGrid.sizeDelta.y * 0.5f);
-
-    }
-
-    private void refreshInventory() {
-        invGrid.sizeDelta = new Vector2(invWidth * tileWidthPx, invHeight * tileHeightPx);
-        invGrid.position = new Vector2(UICanvas.sizeDelta.x * 0.5f - invGrid.sizeDelta.x * 0.5f, UICanvas.sizeDelta.y * 0.5f - invGrid.sizeDelta.y * 0.5f);
-    }
-
-    public void OnPointerEnter(PointerEventData eventData) {
-        active = true;
-    }
-
-    public void OnPointerExit(PointerEventData eventData) {
-        active = false;
+        return ((int)((mousePos.x - selectedInvGrid.GetComponent<RectTransform>().position.x) / selectedInvGrid.tileWidthPx), (int)((selectedInvGrid.GetComponent<RectTransform>().position.y - mousePos.y) / selectedInvGrid.tileHeightPx));
     }
 }
