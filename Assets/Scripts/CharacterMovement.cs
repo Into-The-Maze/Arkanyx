@@ -12,7 +12,7 @@ public class CharacterMovement : MonoBehaviour {
     private float gravityValue = -20f;
     private float jumpHeight = 3.0f;
     public static float stamina;
-    public static float maxStamina = 50f;
+    public static float maxStamina = 75f;
     public float staminaRegenMultiplier = 1f;
     public bool isRunning;
     float staminaCounter = 0f;
@@ -84,6 +84,7 @@ public class CharacterMovement : MonoBehaviour {
             playerVerticalVelocity.y = -1f;
         }
         if (Input.GetButtonDown("Jump") && isGrounded) {
+            stamina -= 10f;
             playerVerticalVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravityValue);
             Debug.Log("Jumped");
         }
