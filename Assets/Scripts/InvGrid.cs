@@ -8,10 +8,12 @@ public class InvGrid : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public int invWidth;
     public int invHeight;
-    public int tileWidthPx = 32;
-    public int tileHeightPx = 32;
 
-    public int offset;
+
+    [HideInInspector] public int tileWidthPx = 32;
+    [HideInInspector] public int tileHeightPx = 32;
+
+    public bool Hotbar;
 
     public (InventoryItem item, int stack, GameObject invObject)[,] inventory;
 
@@ -19,6 +21,7 @@ public class InvGrid : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     RectTransform invGrid;
 
     private void Awake() {
+        
         invGrid = GetComponent<RectTransform>();
         initInventory();
     }
@@ -37,13 +40,13 @@ public class InvGrid : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         //sets grid size based on number of grid squares along its width and height
         invGrid.sizeDelta = new Vector2(invWidth * tileWidthPx, invHeight * tileHeightPx);
-        //positions grid exactly in centre of canvas.
-        invGrid.position = new Vector2(UICanvas.sizeDelta.x * 0.5f - invGrid.sizeDelta.x * 0.5f, UICanvas.sizeDelta.y * 0.5f + invGrid.sizeDelta.y * 0.5f - UICanvas.sizeDelta.y * 0.5f + 10);
-    }
 
-    private void refreshInventory() {
-        invGrid.sizeDelta = new Vector2(invWidth * tileWidthPx, invHeight * tileHeightPx);
-        invGrid.position = new Vector2(UICanvas.sizeDelta.x * 0.5f - invGrid.sizeDelta.x * 0.5f, UICanvas.sizeDelta.y * 0.5f - invGrid.sizeDelta.y * 0.5f - offset);
+
+        //positions grid exactly in centre of canvas. Might be unnecessary depending on how this works out.
+        
+        //invGrid.position = new Vector2(UICanvas.position.x - invGrid.sizeDelta.x * 0.5f, UICanvas.position.y + invGrid.sizeDelta.y * 0.5f);
+
+        //if (Hotbar) invGrid.position += new Vector3(0, -UICanvas.sizeDelta.y * 0.5f + 25, 0);
     }
 
     public void OnPointerEnter(PointerEventData eventData) {

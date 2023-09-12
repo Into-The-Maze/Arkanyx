@@ -30,7 +30,7 @@ public class InvController : MonoBehaviour
 
     private void Update() {
 
-        if (Input.GetMouseButtonDown(0) && selectedInvGrid == null) {
+        if (Input.GetMouseButtonDown(0) && selectedInvGrid == null && selectedItem.item != null) {
             dropItem();
         }
 
