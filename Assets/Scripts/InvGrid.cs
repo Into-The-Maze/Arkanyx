@@ -40,13 +40,6 @@ public class InvGrid : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         //sets grid size based on number of grid squares along its width and height
         invGrid.sizeDelta = new Vector2(invWidth * tileWidthPx, invHeight * tileHeightPx);
-
-
-        //positions grid exactly in centre of canvas. Might be unnecessary depending on how this works out.
-        
-        //invGrid.position = new Vector2(UICanvas.position.x - invGrid.sizeDelta.x * 0.5f, UICanvas.position.y + invGrid.sizeDelta.y * 0.5f);
-
-        //if (Hotbar) invGrid.position += new Vector3(0, -UICanvas.sizeDelta.y * 0.5f + 25, 0);
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
