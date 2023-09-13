@@ -13,8 +13,6 @@ public class InvGrid : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [HideInInspector] public int tileWidthPx = 32;
     [HideInInspector] public int tileHeightPx = 32;
 
-    public bool Hotbar;
-
     public (InventoryItem item, int stack, GameObject invObject)[,] inventory;
 
     public RectTransform UICanvas;
