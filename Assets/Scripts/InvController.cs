@@ -49,6 +49,7 @@ public class InvController : MonoBehaviour
 
     private void dropItem() {
         GameObject droppedItem = Instantiate(selectedItem.item.Item, player.transform.position + player.transform.forward * 1.5f + player.transform.up * 1.1f, Quaternion.identity);
+        droppedItem.tag = "Item";
         var data = droppedItem.AddComponent<InventoryItemData>();
         data.Item = selectedItem.item.Item;
         data.UIImage = selectedItem.item.UIImage;

@@ -34,10 +34,12 @@ public class CharacterMovement : MonoBehaviour {
 
     private void OnTriggerStay(Collider other) {
         if (other.CompareTag("Ground")) { isGrounded = true; }
+        if (other.CompareTag("Item")) { isGrounded = true; }
     }
 
     private void OnTriggerExit(Collider other) {
         if (other.CompareTag("Ground")) { isGrounded = false; }
+        if (other.CompareTag("Item")) { isGrounded = false; }
     }
 
     private void UpdateMoveHorizontal() {
