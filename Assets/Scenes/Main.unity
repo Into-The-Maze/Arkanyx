@@ -288,13 +288,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 330585546}
+  - component: {fileID: 330585549}
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
-  - component: {fileID: 330585547}
   - component: {fileID: 330585548}
   - component: {fileID: 330585550}
-  - component: {fileID: 330585549}
   - component: {fileID: 330585551}
+  - component: {fileID: 330585547}
   m_Layer: 0
   m_Name: Player Camera
   m_TagString: MainCamera
@@ -458,7 +458,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a4bbe10b028d2a42bf9fccd1264b9c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCamera: {fileID: 330585543}
   player: {fileID: 845741277}
   weaponPrefab: {fileID: 5775159944681922632, guid: 8230b264960ba224b9def797fe0c301b,
     type: 3}
@@ -899,7 +898,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  staminaRegenMultiplier: 1
+  staminaRegen: 0
   isRunning: 0
 --- !u!143 &845741285
 CharacterController:

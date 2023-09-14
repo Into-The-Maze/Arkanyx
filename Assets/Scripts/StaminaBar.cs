@@ -7,18 +7,15 @@ public class StaminaBar : MonoBehaviour
 {
     private Slider staminaBar; 
     float maxStamina = CharacterMovement.maxStamina;
-    float stamina;
 
     void Start()
     {
-        staminaBar = GetComponent<Slider>(); 
-        stamina = maxStamina;
+        staminaBar = GetComponent<Slider>();
         staminaBar.maxValue = maxStamina;
     }
 
     void Update()
     {
-        stamina = CharacterMovement.stamina;
-        staminaBar.value = stamina;
+        staminaBar.value = CharacterMovement.stamina;
     }
 }

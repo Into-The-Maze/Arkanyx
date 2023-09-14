@@ -3,21 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour {
+
     private CharacterController body;
-    
 
     private bool isGrounded;
     private Vector3 playerVerticalVelocity = Vector3.zero;
-    public float speed = 6.0f;
-    private float gravityValue = -20f;
-    private float jumpHeight = 3.0f;
+
+    public float speed;
+    
     public static float stamina;
     public static float maxStamina = 75f;
-    public float staminaRegenMultiplier = 1f;
+    public float staminaRegen;
     public bool isRunning;
-    float staminaCounter = 0f;
-    float stamniaRegeneration;
 
+    public bool isCrouching;
+    
+    private const float walkingSpeed = 6f;
+    private const float walkingStaminaRegen = 1f;
+
+    private const float runningSpeed = 10f;
+    private const float runningStaminaRegen = -3f;
+    private const float runningStaminaCutoff = 10f;
+
+    private const float crouchingSpeed = 3f;
+    private const float crouchingStaminaRegen = 1.25f;
+
+    private const float gravityValue = -20f;
+    private const float jumpHeight = 120f;
+    private const float jumpStaminaCost = 10f;
+
+
+    private void Awake() {
+        speed = walkingSpeed;
+        staminaRegen = walkingStaminaRegen;
+    }
     void Start() {
         Cursor.lockState = CursorLockMode.Locked;
         body = GetComponent<CharacterController>();
@@ -27,9 +46,8 @@ public class CharacterMovement : MonoBehaviour {
     void Update() {
         if (!UIToggler.inventoryOpen) {
             UpdateMoveHorizontal();
-            UpdateMoveVertical();
         }
-        
+        UpdateMoveVertical();
     }
 
     private void OnTriggerStay(Collider other) {
@@ -43,37 +61,34 @@ public class CharacterMovement : MonoBehaviour {
     }
 
     private void UpdateMoveHorizontal() {
-        stamina = Mathf.Clamp(stamina, 0, 100);
-        if (Input.GetKeyDown("left shift") && stamina > 10) {
-            speed = 10f;
-            stamina -= 3;
-            staminaRegenMultiplier = 2f;
-            isRunning = true;
-        }
-        if (Input.GetKeyUp("left shift") || stamina == 0) {
-            speed = 6f;
-            staminaRegenMultiplier = 1f;
-            isRunning = false;
-        }
-        if (Input.GetKeyDown("left ctrl")) {
-            speed = 3f;
-            staminaRegenMultiplier = 1.25f;
+        stamina = Mathf.Clamp(stamina, 0, maxStamina);
 
-        }
-        if (Input.GetKeyUp("left ctrl")) {
-            speed = 6f;
-            staminaRegenMultiplier = 1f;
-        }
-        staminaCounter += Time.deltaTime * staminaRegenMultiplier;
-        if (staminaCounter >= 0.1f && stamina < 100) {
-            staminaCounter = 0f;
-            if (isRunning) {
-                stamina -= 1;
-            }
-            else {
-                stamina += 1;
-            }
-        }
+        if (Input.GetKey(KeyCode.LeftShift) && stamina > runningStaminaCutoff && !isCrouching) {
+            speed = runningSpeed;
+            staminaRegen = runningStaminaRegen;
+            isRunning = true;
+        }//walk to run
+
+        if (Input.GetKeyUp(KeyCode.LeftShift) || stamina == 0) {
+            speed = walkingSpeed;
+            staminaRegen = walkingStaminaRegen;
+            isRunning = false;
+        }//run to walk
+
+        if (Input.GetKey(KeyCode.LeftControl) && !isRunning) {
+            speed = crouchingSpeed;
+            staminaRegen = crouchingStaminaRegen;
+            isCrouching = true;
+        }//walk to crouch
+
+        if (Input.GetKeyUp(KeyCode.LeftControl)) {
+            speed = walkingSpeed;
+            staminaRegen = walkingStaminaRegen;
+            isCrouching = false;
+        }//crouch to walk
+
+        stamina += Time.deltaTime * staminaRegen;
+
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direction = (horizontal * body.transform.right + vertical * body.transform.forward).normalized;
@@ -85,10 +100,9 @@ public class CharacterMovement : MonoBehaviour {
         if (isGrounded && playerVerticalVelocity.y < 0f) {
             playerVerticalVelocity.y = -1f;
         }
-        if (Input.GetButtonDown("Jump") && isGrounded) {
-            stamina -= 10f;
-            playerVerticalVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravityValue);
-            Debug.Log("Jumped");
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded) {
+            stamina -= jumpStaminaCost;
+            playerVerticalVelocity.y = Mathf.Sqrt(jumpHeight);
         }
         playerVerticalVelocity.y += gravityValue * Time.deltaTime;
         body.Move(playerVerticalVelocity * Time.deltaTime);
