@@ -294,6 +294,7 @@ GameObject:
   - component: {fileID: 330585548}
   - component: {fileID: 330585550}
   - component: {fileID: 330585549}
+  - component: {fileID: 330585551}
   m_Layer: 0
   m_Name: Player Camera
   m_TagString: MainCamera
@@ -444,6 +445,22 @@ MonoBehaviour:
   player: {fileID: 845741277}
   UICanvas: {fileID: 1103740394}
   itemPrefab: {fileID: 8748276404236097739, guid: d13ffdd2431ef1a479e84126c213df71,
+    type: 3}
+--- !u!114 &330585551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4bbe10b028d2a42bf9fccd1264b9c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCamera: {fileID: 330585543}
+  player: {fileID: 845741277}
+  weaponPrefab: {fileID: 5775159944681922632, guid: 8230b264960ba224b9def797fe0c301b,
     type: 3}
 --- !u!1 &410087039
 GameObject:

@@ -36,17 +36,24 @@ public class HotbarSelect : MonoBehaviour
             equippedItem = null;
             squareSelected = false;
             GetComponent<Image>().color = new Color(255, 255, 255, 0);
+            EquipItem.destroyEquippedItem();
         }
         else if (squareSelected && hotbarIndex != newHotbarIndex) {
-            if (hotbar.GetComponent<InvGrid>().inventory[0, newHotbarIndex - 1].item != null)
+            EquipItem.destroyEquippedItem();
+            if (hotbar.GetComponent<InvGrid>().inventory[0, newHotbarIndex - 1].item != null) {
                 equippedItem = hotbar.GetComponent<InvGrid>().inventory[0, newHotbarIndex - 1].item;
+                EquipItem.instantiateEquippedItem();
+            }
             else equippedItem = null;
             squareSelected = true;
             GetComponent<Image>().color = new Color(255, 255, 255, 255);
         }
         else if (!squareSelected) {
-            if (hotbar.GetComponent<InvGrid>().inventory[0, newHotbarIndex - 1].item != null)
+            EquipItem.destroyEquippedItem();
+            if (hotbar.GetComponent<InvGrid>().inventory[0, newHotbarIndex - 1].item != null) {
                 equippedItem = hotbar.GetComponent<InvGrid>().inventory[0, newHotbarIndex - 1].item;
+                EquipItem.instantiateEquippedItem();
+            }
             else equippedItem = null;
             squareSelected = true;
             GetComponent<Image>().color = new Color(255, 255, 255, 255);

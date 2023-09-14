@@ -11,7 +11,7 @@ public class CameraHandler : MonoBehaviour
     private float cameraVerticalRotation;
 
     private const float maxLookUpDegrees = -80f;
-    private const float maxLookDownDegrees = 90f;
+    private const float maxLookDownDegrees = 70f;
 
     
 
