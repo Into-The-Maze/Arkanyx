@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EquipItem : MonoBehaviour
@@ -22,6 +23,8 @@ public class EquipItem : MonoBehaviour
         equippedObject = (GameObject)Instantiate((Object)instance.weaponPrefab, instance.player.transform, false);
         equippedObject.transform.rotation = instance.player.transform.rotation * niceEquipRotation;
         equippedObject.transform.localPosition = niceEquipPosition;
+        instance.weaponPrefab.GetComponent<Rigidbody>().isKinematic = false;
+        instance.weaponPrefab.GetComponent<Rigidbody>().useGravity = true;
     }
 
     public static void destroyEquippedItem() {

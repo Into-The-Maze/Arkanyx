@@ -38,9 +38,15 @@ public class InvController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && selectedItem.item == null) {
             selectItem(getInvSquareCoords(Input.mousePosition));
+            if (selectedInvGrid.name == "Hotbar") {
+                HotbarSelect.instance.updateHotbar(getInvSquareCoords(Input.mousePosition).x + 1);
+            }
         }
         else if (Input.GetMouseButtonDown(0) && selectedItem.item != null) {
             placeItem(getInvSquareCoords(Input.mousePosition));
+            if (selectedInvGrid.name == "Hotbar") {
+                HotbarSelect.instance.updateHotbar(getInvSquareCoords(Input.mousePosition).x + 1);
+            }
         }
         if (Input.GetKeyDown(KeyCode.R) && selectedItem.item == null) {//test script
             createRandomItem();
@@ -156,7 +162,7 @@ public class InvController : MonoBehaviour
         }
     }
 
-    private (int, int) getInvSquareCoords(Vector2 mousePos) {
+    private (int x, int y) getInvSquareCoords(Vector2 mousePos) {
         return ((int)((mousePos.x - selectedInvGrid.GetComponent<RectTransform>().position.x) / selectedInvGrid.tileWidthPx), (int)((selectedInvGrid.GetComponent<RectTransform>().position.y - mousePos.y) / selectedInvGrid.tileHeightPx));
     }
 }

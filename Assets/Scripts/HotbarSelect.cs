@@ -11,11 +11,12 @@ public class HotbarSelect : MonoBehaviour
     public static InventoryItem equippedItem;
     public GameObject hotbar;
 
-    
+    public static HotbarSelect instance;
 
     private void Awake() {
         squareSelected = false;
         hotbarIndex = 0;
+        instance = this;
     }
 
     private void Update() {
@@ -31,7 +32,7 @@ public class HotbarSelect : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha0)) updateHotbar(10);
     }
 
-    private void updateHotbar(int newHotbarIndex) {
+    public void updateHotbar(int newHotbarIndex) {
         if (squareSelected && hotbarIndex == newHotbarIndex) {
             equippedItem = null;
             squareSelected = false;
