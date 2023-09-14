@@ -26,6 +26,7 @@ public class EquipItem : MonoBehaviour
 
     public static void destroyEquippedItem() {
         Destroy(equippedObject);
+        HotbarSelect.equippedItem = null;
     }
 
     private void Awake() {
