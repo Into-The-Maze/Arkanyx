@@ -63,13 +63,13 @@ public class CharacterMovement : MonoBehaviour {
     private void UpdateMoveHorizontal() {
         stamina = Mathf.Clamp(stamina, 0, maxStamina);
 
-        if (Input.GetKey(KeyCode.LeftShift) && stamina > runningStaminaCutoff && !isCrouching) {
+        if (Input.GetKey(KeyCode.LeftShift) && stamina > runningStaminaCutoff && !isCrouching && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))) {
             speed = runningSpeed;
             staminaRegen = runningStaminaRegen;
             isRunning = true;
         }//walk to run
 
-        if (Input.GetKeyUp(KeyCode.LeftShift) || stamina == 0) {
+        if (Input.GetKeyUp(KeyCode.LeftShift) || stamina == 0 || !(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))) {
             speed = walkingSpeed;
             staminaRegen = walkingStaminaRegen;
             isRunning = false;
