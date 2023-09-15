@@ -8,15 +8,18 @@ public class UIToggler : MonoBehaviour
     private bool cursorLocked = true;
     private bool cursorVisible = false;
 
-
+    public GameObject crosshair;
     public GameObject inventory;
     public static bool inventoryOpen;
 
     private void Start() {
         Cursor.visible = cursorVisible;
         Cursor.lockState = cursorLocked ? CursorLockMode.Locked : CursorLockMode.None;
+
         inventoryOpen = false;
         inventory.SetActive(inventoryOpen);
+
+        crosshair.SetActive(!inventoryOpen);
     }
 
     private void Update() {
@@ -36,5 +39,6 @@ public class UIToggler : MonoBehaviour
         cursorLocked = !cursorLocked;
         Cursor.visible = cursorVisible;
         Cursor.lockState = cursorLocked ? CursorLockMode.Locked : CursorLockMode.None;
+        crosshair.SetActive(!inventoryOpen);
     }
 }

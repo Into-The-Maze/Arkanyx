@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,14 +14,17 @@ public class InvController : MonoBehaviour
    
     public static bool itemSelected;
 
+    public InvGrid mainInv;
     public static InvGrid selectedInvGrid;
     
-
     public RectTransform UICanvas;
 
     private (InventoryItem item, int stack) selectedItem;
-    private GameObject selectedItemGameObject;
+    private GameObject selectedItemImage;
     public GameObject itemPrefab;
+
+    private InventoryItem itemToInsert;
+    private GameObject itemToInsertImage;
 
     private void Awake() {
         selectedInvGrid = null;
@@ -52,6 +56,15 @@ public class InvController : MonoBehaviour
             createRandomItem();
         }
     }
+    private void createRandomItem() { //again, test script
+        selectedItem.item = ItemDropTable.i.allItems[UnityEngine.Random.Range(0, ItemDropTable.i.allItems.Count)];
+        selectedItem.stack = 1;
+        itemPrefab.GetComponent<UnityEngine.UI.Image>().sprite = selectedItem.item.UIImage;
+        itemPrefab.name = selectedItem.item.ID;
+        itemPrefab.GetComponentInChildren<Text>().text = selectedItem.stack.ToString();
+        selectedItemImage = Instantiate(itemPrefab, Input.mousePosition, Quaternion.identity, UICanvas.transform);
+        StartCoroutine(drag(selectedItemImage));
+    }
 
     private void dropItem() {
         GameObject droppedItem = Instantiate(selectedItem.item.Item, player.transform.position + player.transform.forward * 1.5f + player.transform.up * 1.1f, Quaternion.identity);
@@ -61,13 +74,64 @@ public class InvController : MonoBehaviour
         data.UIImage = selectedItem.item.UIImage;
         data.ID = selectedItem.item.ID;
         data.Stackable = selectedItem.item.Stackable;
-        data.Stackable = selectedItem.item.Use;
+        data.Use = selectedItem.item.Use;
 
         selectedItem.item = null;
         selectedItem.stack = 0;
-        Destroy(selectedItemGameObject);
+        Destroy(selectedItemImage);
 
         itemSelected = false;
+    }
+    
+    public void insertItem(InventoryItemData data) {
+
+        if (data == null) { Debug.Log("Cringe"); return; }
+        if (data.ID == null) { Debug.Log("Cringe 2"); return; }
+
+        (int x, int y)? firstBlankSpace = null;
+        (int x, int y)? firstStackSlot = null;
+
+        mainInv.gameObject.SetActive(true);
+
+        for (int i = 0; i < mainInv.invHeight; i++) {
+            for (int j = 0; j < mainInv.invWidth; j++) {
+                if (mainInv.inventory[j, i].item == null) firstBlankSpace = (j, i);
+                if (mainInv.inventory[j, i].item.ID == data.ID && data.Stackable) { firstStackSlot = (j, i); goto breakPoint; };
+            }
+        }
+        breakPoint:
+
+        if (firstStackSlot != null) {
+            mainInv.inventory[firstStackSlot.Value.y, firstStackSlot.Value.x].stack += 1;
+            mainInv.inventory[firstStackSlot.Value.y, firstStackSlot.Value.x].invObject.GetComponentInChildren<Text>().text = mainInv.inventory[firstStackSlot.Value.y, firstStackSlot.Value.x].stack.ToString();
+        }//stack item
+        else if (firstBlankSpace != null) {
+            itemPrefab.GetComponent<UnityEngine.UI.Image>().sprite = data.UIImage;
+            itemPrefab.name = data.ID;
+            itemPrefab.GetComponentInChildren<Text>().text = selectedItem.stack.ToString();
+            itemToInsertImage = Instantiate(itemPrefab, mainInv.transform);
+
+            itemToInsert.Item = data.Item;
+            itemToInsert.UIImage = data.UIImage;
+            itemToInsert.ID = data.ID;
+            itemToInsert.Stackable = data.Stackable;
+            itemToInsert.Use = data.Use;
+
+            mainInv.inventory[firstBlankSpace.Value.y, firstBlankSpace.Value.x].item = itemToInsert;
+            mainInv.inventory[firstBlankSpace.Value.y, firstBlankSpace.Value.x].stack = 1;
+            mainInv.inventory[firstBlankSpace.Value.y, firstBlankSpace.Value.x].invObject = itemToInsertImage;
+
+            itemToInsert = null;
+
+            selectedItemImage.transform.localPosition = new Vector2(firstBlankSpace.Value.x * mainInv.tileWidthPx + mainInv.tileWidthPx * 0.5f, -(firstBlankSpace.Value.y * mainInv.tileHeightPx + mainInv.tileHeightPx * 0.5f));
+
+            itemToInsertImage = null;
+        }//place item in new slot
+        else {
+            
+        }//inv full
+
+        mainInv.gameObject.SetActive(false);
     }
 
     private void placeItem((int x, int y) squareReference) {
@@ -76,7 +140,7 @@ public class InvController : MonoBehaviour
         if (selectedInvGrid.inventory[squareReference.y, squareReference.x].item == null) {
             selectedInvGrid.inventory[squareReference.y, squareReference.x].item = selectedItem.item;
             selectedInvGrid.inventory[squareReference.y, squareReference.x].stack = selectedItem.stack;
-            selectedInvGrid.inventory[squareReference.y, squareReference.x].invObject = selectedItemGameObject;
+            selectedInvGrid.inventory[squareReference.y, squareReference.x].invObject = selectedItemImage;
 
             selectedItem.item = null;
             selectedItem.stack = 0;
@@ -93,7 +157,7 @@ public class InvController : MonoBehaviour
 
             selectedItem.item = null;
             selectedItem.stack = 0;
-            Destroy(selectedItemGameObject);
+            Destroy(selectedItemImage);
 
             itemSelected = false;
         }
@@ -102,7 +166,7 @@ public class InvController : MonoBehaviour
         else {
 
             (InventoryItem item, int stack) tempData = selectedItem;
-            GameObject tempObject = selectedItemGameObject;
+            GameObject tempObject = selectedItemImage;
             StopAllCoroutines();
             placeItemObject(squareReference);
             
@@ -117,11 +181,11 @@ public class InvController : MonoBehaviour
     }
 
     private void placeItemObject((int x, int y) squareReference) {
-        selectedItemGameObject.transform.SetParent(selectedInvGrid.transform);
+        selectedItemImage.transform.SetParent(selectedInvGrid.transform);
 
-        selectedItemGameObject.transform.localPosition = new Vector2(squareReference.x * selectedInvGrid.tileWidthPx + selectedInvGrid.tileWidthPx * 0.5f, -(squareReference.y * selectedInvGrid.tileHeightPx + selectedInvGrid.tileHeightPx * 0.5f));
+        selectedItemImage.transform.localPosition = new Vector2(squareReference.x * selectedInvGrid.tileWidthPx + selectedInvGrid.tileWidthPx * 0.5f, -(squareReference.y * selectedInvGrid.tileHeightPx + selectedInvGrid.tileHeightPx * 0.5f));
 
-        selectedItemGameObject = null;
+        selectedItemImage = null;
     }
 
     private void selectItem((int x, int y) squareReference) {
@@ -131,28 +195,18 @@ public class InvController : MonoBehaviour
 
         selectedItem.item = selectedInvGrid.inventory[squareReference.y, squareReference.x].item;
         selectedItem.stack = selectedInvGrid.inventory[squareReference.y, squareReference.x].stack;
-        selectedItemGameObject = selectedInvGrid.inventory[squareReference.y, squareReference.x].invObject;
+        selectedItemImage = selectedInvGrid.inventory[squareReference.y, squareReference.x].invObject;
 
-        selectedItemGameObject.transform.SetParent(UICanvas.transform);
+        selectedItemImage.transform.SetParent(UICanvas.transform);
 
         selectedInvGrid.inventory[squareReference.y, squareReference.x].item = null;
         selectedInvGrid.inventory[squareReference.y, squareReference.x].stack = 0;
         selectedInvGrid.inventory[squareReference.y, squareReference.x].invObject = null;
 
-        StartCoroutine(drag(selectedItemGameObject));
+        StartCoroutine(drag(selectedItemImage));
         
 
 
-    }
-
-    private void createRandomItem() { //again, test script
-        selectedItem.item = ItemDropTable.i.allItems[UnityEngine.Random.Range(0, ItemDropTable.i.allItems.Count)];
-        selectedItem.stack = 1;
-        itemPrefab.GetComponent<UnityEngine.UI.Image>().sprite = selectedItem.item.UIImage;
-        itemPrefab.name = selectedItem.item.ID;
-        itemPrefab.GetComponentInChildren<Text>().text = selectedItem.stack.ToString();
-        selectedItemGameObject = Instantiate(itemPrefab, Input.mousePosition, Quaternion.identity, UICanvas.transform);
-        StartCoroutine(drag(selectedItemGameObject));
     }
 
     IEnumerator drag(GameObject item) {

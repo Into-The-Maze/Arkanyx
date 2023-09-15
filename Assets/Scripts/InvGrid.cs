@@ -8,8 +8,7 @@ public class InvGrid : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public int invWidth;
     public int invHeight;
-
-
+   
     [HideInInspector] public int tileWidthPx = 32;
     [HideInInspector] public int tileHeightPx = 32;
 
