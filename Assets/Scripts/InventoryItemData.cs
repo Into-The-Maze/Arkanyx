@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class InventoryItemData : MonoBehaviour
@@ -11,4 +12,6 @@ public class InventoryItemData : MonoBehaviour
     public string ID;
 
     public bool Stackable;
+
+    public MonoScript Use;
 }

@@ -16,3 +16,4 @@ MonoBehaviour:
   UIImage: {fileID: 21300000, guid: 15ab2376212ec7145b8a9284e37d7434, type: 3}
   ID: 0002
   Stackable: 0
+  Use: {fileID: 11500000, guid: d7140482c401dbc4294a13ba5fa18af0, type: 3}

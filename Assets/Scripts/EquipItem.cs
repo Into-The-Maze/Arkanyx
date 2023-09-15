@@ -15,11 +15,15 @@ public class EquipItem : MonoBehaviour
     private static Quaternion niceEquipRotation = Quaternion.Euler(0f, 90f, 30f);
 
     public static void instantiateEquippedItem() {
+
+        //get weapon from hotbar
         instance.weaponPrefab = HotbarSelect.equippedItem.Item;
+
+        //stop it colliding with the player
         instance.weaponPrefab.GetComponent<Rigidbody>().isKinematic = true;
         instance.weaponPrefab.GetComponent<Rigidbody>().useGravity = false;
-        //equippedObject = Instantiate(instance.weaponPrefab, new Vector3(0.3f, 0.7f, 0.2f), instance.player.transform.rotation * Quaternion.Euler(0f, 90f, 30f), instance.playerCamera.transform);
 
+        //instantiate and move to nice position next to player
         equippedObject = (GameObject)Instantiate((Object)instance.weaponPrefab, instance.player.transform, false);
         equippedObject.transform.rotation = instance.player.transform.rotation * niceEquipRotation;
         equippedObject.transform.localPosition = niceEquipPosition;

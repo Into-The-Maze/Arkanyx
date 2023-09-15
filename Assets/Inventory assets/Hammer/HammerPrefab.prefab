@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7582572580718016419}
   - component: {fileID: 3406641049192179790}
   - component: {fileID: 6928400325718511016}
+  - component: {fileID: -802207986894462864}
   m_Layer: 0
   m_Name: HammerPrefab
   m_TagString: Untagged
@@ -116,3 +117,15 @@ CapsuleCollider:
   m_Height: 1.2637168
   m_Direction: 1
   m_Center: {x: 0, y: 0.5758584, z: 0.00047651303}
+--- !u!114 &-802207986894462864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8230972524184196726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7140482c401dbc4294a13ba5fa18af0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -61,6 +61,7 @@ public class InvController : MonoBehaviour
         data.UIImage = selectedItem.item.UIImage;
         data.ID = selectedItem.item.ID;
         data.Stackable = selectedItem.item.Stackable;
+        data.Stackable = selectedItem.item.Use;
 
         selectedItem.item = null;
         selectedItem.stack = 0;

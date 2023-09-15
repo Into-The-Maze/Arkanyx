@@ -19,8 +19,6 @@ public class CameraHandler : MonoBehaviour
     {
         mouseSensitivity = 2f;
         cameraVerticalRotation = 0f;
-
-        
     }
 
     void Update()
@@ -29,14 +27,12 @@ public class CameraHandler : MonoBehaviour
             handleCameraVertical();
             handleCameraHorizontal();
         }
-        
     }
 
     private void handleCameraVertical() {
         cameraVerticalRotation -= Input.GetAxis("Mouse Y") * mouseSensitivity;
         cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation, maxLookUpDegrees, maxLookDownDegrees);
         transform.localEulerAngles = Vector3.right * cameraVerticalRotation;
-
     }
 
     private void handleCameraHorizontal() {
