@@ -15,7 +15,7 @@ public class InteractController : MonoBehaviour
 
         if (UIToggler.inventoryOpen) return;
 
-        Ray ray = new Ray(transform.position, transform.forward);
+        Ray ray = new(transform.position, transform.forward);
         if (itemCheck(ray) && !crRunning) {
             StartCoroutine(pickUp(ray));
             prompt.text = "Pick up (E)";
@@ -30,7 +30,7 @@ public class InteractController : MonoBehaviour
     }
 
     private bool itemCheck(Ray ray) {
-        return Physics.Raycast(ray, out RaycastHit hit, maxInteractDistance) && hit.collider.gameObject.CompareTag("Item");
+        return Physics.Raycast(ray, out RaycastHit hit, maxInteractDistance) && hit.transform.gameObject.CompareTag("Item");
     }
 
     private IEnumerator pickUp(Ray ray) {
@@ -38,8 +38,10 @@ public class InteractController : MonoBehaviour
         while (crRunning) {
             if (Input.GetKeyDown(KeyCode.E)) {
                 Physics.Raycast(ray, out RaycastHit hit, maxInteractDistance);
-                Camera.main.GetComponent<InvController>().insertItem(hit.collider.gameObject.GetComponent<InventoryItemData>());
-                Destroy(hit.collider.gameObject);
+                Debug.Log(hit.collider.gameObject.name);
+                Debug.Log(hit.collider.gameObject.GetComponent<InventoryItemData>());
+                Camera.main.GetComponent<InvController>().insertItem(hit.transform.gameObject.GetComponent<InventoryItemData>());
+                Destroy(hit.transform.gameObject);
             }
             yield return null;
         }

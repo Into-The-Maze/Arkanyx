@@ -12,6 +12,6 @@ public class ItemDropTable : MonoBehaviour
 
     public static ItemDropTable i;
     private void Start() {
-        i = GetComponent<ItemDropTable>();
+        i = this;
     }
 }

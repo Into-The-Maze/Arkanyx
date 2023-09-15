@@ -30,6 +30,7 @@ public class InvController : MonoBehaviour
         selectedInvGrid = null;
         selectedItem.item = null;
         selectedItem.stack = 0;
+
     }
 
     private void Update() {
@@ -85,18 +86,15 @@ public class InvController : MonoBehaviour
     
     public void insertItem(InventoryItemData data) {
 
-        if (data == null) { Debug.Log("Cringe"); return; }
-        if (data.ID == null) { Debug.Log("Cringe 2"); return; }
-
         (int x, int y)? firstBlankSpace = null;
         (int x, int y)? firstStackSlot = null;
 
-        mainInv.gameObject.SetActive(true);
-
         for (int i = 0; i < mainInv.invHeight; i++) {
             for (int j = 0; j < mainInv.invWidth; j++) {
-                if (mainInv.inventory[j, i].item == null) firstBlankSpace = (j, i);
-                if (mainInv.inventory[j, i].item.ID == data.ID && data.Stackable) { firstStackSlot = (j, i); goto breakPoint; };
+                if (mainInv.inventory[i, j].item == null) firstBlankSpace = (j, i);
+
+                if (mainInv.inventory[i, j].item != null)
+                    if (mainInv.inventory[i, j].item.ID == data.ID && data.Stackable) { firstStackSlot = (j, i); goto breakPoint; };
             }
         }
         breakPoint:
@@ -108,14 +106,10 @@ public class InvController : MonoBehaviour
         else if (firstBlankSpace != null) {
             itemPrefab.GetComponent<UnityEngine.UI.Image>().sprite = data.UIImage;
             itemPrefab.name = data.ID;
-            itemPrefab.GetComponentInChildren<Text>().text = selectedItem.stack.ToString();
+            itemPrefab.GetComponentInChildren<Text>().text = "1";
             itemToInsertImage = Instantiate(itemPrefab, mainInv.transform);
 
-            itemToInsert.Item = data.Item;
-            itemToInsert.UIImage = data.UIImage;
-            itemToInsert.ID = data.ID;
-            itemToInsert.Stackable = data.Stackable;
-            itemToInsert.Use = data.Use;
+            itemToInsert = ItemDropTable.i.allItems[int.Parse(data.ID)];
 
             mainInv.inventory[firstBlankSpace.Value.y, firstBlankSpace.Value.x].item = itemToInsert;
             mainInv.inventory[firstBlankSpace.Value.y, firstBlankSpace.Value.x].stack = 1;
@@ -123,15 +117,13 @@ public class InvController : MonoBehaviour
 
             itemToInsert = null;
 
-            selectedItemImage.transform.localPosition = new Vector2(firstBlankSpace.Value.x * mainInv.tileWidthPx + mainInv.tileWidthPx * 0.5f, -(firstBlankSpace.Value.y * mainInv.tileHeightPx + mainInv.tileHeightPx * 0.5f));
+            itemToInsertImage.transform.localPosition = new Vector2(firstBlankSpace.Value.x * mainInv.tileWidthPx + mainInv.tileWidthPx * 0.5f, -(firstBlankSpace.Value.y * mainInv.tileHeightPx + mainInv.tileHeightPx * 0.5f));
 
             itemToInsertImage = null;
         }//place item in new slot
         else {
             
         }//inv full
-
-        mainInv.gameObject.SetActive(false);
     }
 
     private void placeItem((int x, int y) squareReference) {
