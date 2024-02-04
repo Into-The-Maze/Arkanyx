@@ -31,6 +31,14 @@ public class EquipItem : MonoBehaviour
         instance.weaponPrefab.GetComponent<Rigidbody>().useGravity = true;
     }
 
+    private void Update() {
+        if (equippedObject == null) { return; }
+
+        if (Input.GetMouseButtonDown(0) && !UIToggler.inventoryOpen) {
+            equippedObject.GetComponent<Use0002>().Use();
+        }
+    }
+
     public static void destroyEquippedItem() {
         Destroy(equippedObject);
         HotbarSelect.equippedItem = null;
